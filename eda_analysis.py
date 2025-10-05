@@ -1,5 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.ticker import FixedLocator
+
 pd.set_option('display.max_info_columns', 200)  
 
 
@@ -43,11 +46,46 @@ for col in ['pace','shooting','passing','dribbling','defending','physic']:
     df[col].fillna(df[col].median(), inplace=True)
     df1[col].fillna(df1[col].median(), inplace=True)
 
-df.to_csv(r'E:\Asir\Project2_FIFA-EDA-analysis\players_22.csv', index=False)
-df1.to_csv(r'E:\Asir\Project2_FIFA-EDA-analysis\players_19.csv', index=False)
 
-print(df1[['Name','Age','Nationality','Club','Position','Value','Wage', 'pace','shooting','passing','dribbling','defending','physic']].isnull().sum())
-print(df[['Name','Age','Nationality','Club','Position','Value','Wage', 'pace','shooting','passing','dribbling','defending','physic']].isnull().sum())
+fig, ax = plt.subplots(2, 2, figsize=(14, 8))
+# Age Distribution Comparison
+bins = np.linspace(df['Age'].min(), df['Age'].max(),10)  
+ax[0,0].hist(df['Age'], bins=bins, color='blue', alpha=0.5, edgecolor='black', label='FIFA 2022')
+ax[0,0].hist(df1['Age'], bins=bins, color='red', alpha=0.5, edgecolor='black', label='FIFA 2019')
+ax[0,0].set_title("Age Distribution of Players (2022 vs 2019)")
+ax[0,0].set_xlabel("Player Age")
+ax[0,0].set_ylabel("Number of Players")
+ax[0,0].legend()
+ax[0,0].set_xticks(bins.round(1))
+
+player_per_nationality_22=(df.groupby(['Nationality']).size()).sort_values(ascending=False).head(10)
+player_per_nationality_19=(df1.groupby(['Nationality']).size()).sort_values(ascending=False).head(10)
+all_nationalities = player_per_nationality_22.index.union(player_per_nationality_19.index)
+player_per_nationality_22 = player_per_nationality_22.reindex(all_nationalities, fill_value=0)
+player_per_nationality_19 = player_per_nationality_19.reindex(all_nationalities, fill_value=0)
+
+x = np.arange(len(all_nationalities)) 
+width = 0.35 
+
+ax[0,1].bar(x - width/2, player_per_nationality_22.values, width, color='orange', alpha=0.7, label='FIFA 2022')
+ax[0,1].bar(x + width/2, player_per_nationality_19.values, width, color='blue', alpha=0.4, label='FIFA 2019')
+ax[0,1].xaxis.set_major_locator(FixedLocator(x))
+ax[0,1].set_xticklabels(all_nationalities, rotation=45, ha='right')
+ax[0,1].set_title("Nationality Distribution of Players (2022 vs 2019)")
+ax[0,1].set_xlabel("Nationality")
+ax[0,1].set_ylabel("Number of Players")
+ax[0,1].legend()
+
+plt.tight_layout()
+plt.show()
+
+
+
+#df.to_csv(r'E:\Asir\Project2_FIFA-EDA-analysis\players_22.csv', index=False)
+#df1.to_csv(r'E:\Asir\Project2_FIFA-EDA-analysis\players_19.csv', index=False)
+
+#print(df1[['Name','Age','Nationality','Club','Position','Value','Wage', 'pace','shooting','passing','dribbling','defending','physic']].isnull().sum())
+#print(df[['Name','Age','Nationality','Club','Position','Value','Wage', 'pace','shooting','passing','dribbling','defending','physic']].isnull().sum())
 
 #Check Missing Columns
 #to_check=['Finishing','Age','Nationality','Club','Position','Value','Wage', 'pace','shooting','passing','dribbling','defending','physic']
