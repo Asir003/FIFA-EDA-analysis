@@ -43,8 +43,8 @@ for col in ['pace','shooting','passing','dribbling','defending','physic']:
     df[col].fillna(df[col].median(), inplace=True)
     df1[col].fillna(df1[col].median(), inplace=True)
 
-df.to_csv(r'E:\Asir\Project2_FIFA-EDA-analysis\cleaned_players_22.csv', index=False)
-df1.to_csv(r'E:\Asir\Project2_FIFA-EDA-analysis\cleaned_players_19.csv', index=False)
+df.to_csv(r'E:\Asir\Project2_FIFA-EDA-analysis\players_22.csv', index=False)
+df1.to_csv(r'E:\Asir\Project2_FIFA-EDA-analysis\players_19.csv', index=False)
 
 print(df1[['Name','Age','Nationality','Club','Position','Value','Wage', 'pace','shooting','passing','dribbling','defending','physic']].isnull().sum())
 print(df[['Name','Age','Nationality','Club','Position','Value','Wage', 'pace','shooting','passing','dribbling','defending','physic']].isnull().sum())
